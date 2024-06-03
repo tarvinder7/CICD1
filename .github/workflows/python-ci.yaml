@@ -1,0 +1,31 @@
+# name of my pipeline 
+name: ashu python cicd pipeline
+on: 
+    push:
+        branches: ["master1"]
+# jobs 
+jobs: 
+    ashu-build-test:
+        runs-on: ubuntu-latest
+        steps: 
+        # name is common keyword to definine steps 
+        # under name we can use alot of keywords 
+        #  example run -- we can supply commands as per runner server
+        #          uses -- we can use github actions / templates
+            - name: checking docker version 
+              run: |
+                echo "checking docker version"
+                docker version 
+                docker-compose version 
+            - name: cloning my code and run compose 
+              run: | 
+                git clone https://github.com/redashu/devops_oracle_webapp.git
+                cd devops_oracle_webapp
+                docker-compose up -d --build 
+                sleep 2
+                docker-compose ps 
+            - name: testing webapp by access it 
+              run: |
+                echo "we can use any tool to acccess web page like postman, curl , http"
+                curl -f http://localhost:5000/test.html
+
