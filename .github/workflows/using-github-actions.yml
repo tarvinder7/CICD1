@@ -1,11 +1,11 @@
 # name of my pipeline 
-name: ashu python cicd pipeline
+name: tarvinder python cicd pipeline
 on: 
     push:
-        branches: ["master"]
+        branches: ["main"]
 # jobs 
 jobs: 
-    ashu-build-test:
+    tarvinder-build-test:
         runs-on: ubuntu-latest
         steps: 
         # name is common keyword to definine steps 
@@ -44,5 +44,5 @@ jobs:
               with:
                 context: . # location of dockerfile 
                 push: true
-                tags: ${{ secrets.DOCKER_USERNAME }}/ashutestapp:v1
+                tags: ${{ secrets.DOCKER_USERNAME }}/tarvitestapp:v1
 

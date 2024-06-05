@@ -2,7 +2,7 @@
 name: ashu python cicd pipeline
 on: 
     push:
-        branches: ["main"]
+        branches: ["main1"]
 # jobs 
 jobs: 
     tarvin-build-test:
