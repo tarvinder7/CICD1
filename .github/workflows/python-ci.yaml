@@ -27,5 +27,5 @@ jobs:
             - name: testing webapp by access it 
               run: |
                 echo "we can use any tool to acccess web page like postman, curl , http"
-                curl -f http://localhost:5000/test.html
+                curl -f http://localhost:5000
 
