@@ -2,10 +2,10 @@
 name: ashu python cicd pipeline
 on: 
     push:
-        branches: ["master1"]
+        branches: ["main"]
 # jobs 
 jobs: 
-    ashu-build-test:
+    tarvin-build-test:
         runs-on: ubuntu-latest
         steps: 
         # name is common keyword to definine steps 
@@ -19,8 +19,8 @@ jobs:
                 docker-compose version 
             - name: cloning my code and run compose 
               run: | 
-                git clone https://github.com/redashu/devops_oracle_webapp.git
-                cd devops_oracle_webapp
+                git clone https://github.com/tarvinder7/CICD1.git
+                cd CICD1
                 docker-compose up -d --build 
                 sleep 2
                 docker-compose ps 
