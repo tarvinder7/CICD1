@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashu-web
+  name: ashu-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ashu-web
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashu-web
+    spec:
+      containers:
+      - image: dockerashu/ashutestapp:appvb7994eb1ace3b2823b6ee7c7fd8dcd7a18572bd8
+        name: ashutestapp
+        ports:
+        - containerPort: 5000
+        resources: {}
+status: {}

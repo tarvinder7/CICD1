@@ -1,0 +1,103 @@
+# name of my pipeline 
+name: tarvinder python cicd pipeline
+on: 
+    push:
+        branches: ["main"]
+# jobs 
+jobs: 
+    tarv-build-test:
+        runs-on: ubuntu-latest
+        steps: 
+        # name is common keyword to definine steps 
+        # under name we can use alot of keywords 
+        #  example run -- we can supply commands as per runner server
+        #          uses -- we can use github actions / templates
+            - name: checking docker version 
+              run: |
+                echo "checking docker version"
+                docker version 
+                docker-compose version 
+
+            - name: cloning my code using github action 
+              uses: actions/checkout@v4 
+               
+            # above actions is gonna clone data from current git rpeo  in runner machine
+            - name: build image and create container 
+              run: | 
+                ls -a 
+                docker-compose up -d 
+                sleep 2 
+                docker-compose ps 
+
+            - name: testing webapp by access it 
+              run: |
+                echo "we can use any tool to acccess web page like postman, curl , http"
+                curl -f http://localhost:5000/health
+
+            - name: uploading relevent to github artifact server
+              uses: actions/upload-artifact@v4
+              with:
+                name: tarv-artifacts
+                path: |
+                    . 
+                    !**/.git*
+                    !**/*.md
+                    !**/compose.yml
+    tarv-final-build-push:
+        runs-on: ubuntu-latest
+        needs: tarv-build-test 
+        steps:   
+            - name: download artifact 
+              uses: actions/download-artifact@v4 
+              with: 
+                name: tarv-artifacts
+                path: . 
+            
+            - name: login to docker hub 
+              uses: docker/login-action@v3
+              with:
+                username: ${{ secrets.DOCKER_USERNAME }}
+                password: ${{ secrets.DOCKER_PASSWORD }}
+            # - name: creating timestamp
+            #   run: | 
+            #     myTag=`date  +%Y%T`
+            - name: rebuild image and push it 
+              uses: docker/build-push-action@v5
+              with:
+                context: . # location of dockerfile 
+                push: true
+                tags: ${{ secrets.DOCKER_USERNAME }}/tarvtestapp:appv${{ github.sha }}
+                # tarvinder7/tarvtestapp:v1 
+
+    tarv-deploy-k8s:
+      needs: tarv-final-build-push
+      runs-on: self-hosted
+      steps:
+        - name: checking docker and k8s access
+          run: |
+            whoami
+            docker version 
+            kubectl version --client 
+            kubectl get nodes 
+
+        - name: download artifact 
+          uses: actions/download-artifact@v4 
+          with: 
+            name: tarv-artifacts
+            path: . 
+        - name: deploy docker image in k8s 
+          run: | 
+            ls 
+            kubectl apply -f k8s-manifest
+            sleep 4
+            kubectl get deploy 
+            kubectl get pods
+            kubectl get svc 
+
+        - name: upgrade app to latest version 
+          run: | 
+            echo "checking existing deploy and pods"
+            kubectl get deploy,pod
+            echo "updating latest docker image to running deployment"
+            kubectl set image deployment tarv-web tarvtestapp=${{ secrets.DOCKER_USERNAME }}/tarvtestapp:appv${{ github.sha }}
+
