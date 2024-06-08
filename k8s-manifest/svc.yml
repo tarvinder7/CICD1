@@ -3,8 +3,8 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    app: ashulb3
-  name: ashulb3
+    app: tarvlb3
+  name: tarvlb3
 spec:
   ports:
   - name: 80-5000
@@ -12,7 +12,7 @@ spec:
     protocol: TCP
     targetPort: 5000
   selector:
-    app: ashu-web
+    app: tarv-web
   type: ClusterIP
 status:
   loadBalancer: {}
